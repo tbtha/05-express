@@ -6,7 +6,7 @@ const HATEOAS = ()=>{
   return joyas.results.map(item => {
     return{
       name: item.name,
-      href:`http://localhost:3000//api/v1/joyas/${item.id}`
+      href:`http://localhost:3000/api/v2/joyas/${item.id}`
     }
   })
 }
@@ -15,7 +15,7 @@ const HATEOAS2 = ()=>{
   return joyas.results.map(item => {
     return{
       nombre: item.name,
-      src:`http://localhost:3000//api/v1/joyas/${item.id}`
+      src:`http://localhost:3000/api/v2/joyas/${item.id}`
     }
   })
 }
@@ -48,8 +48,8 @@ app.get('/api/v2/joyas', (req, res) => {
       return res.json(asc)
   }
   if(values == "des"){
-    const asc = joyas.results.sort((a,b) => (a.value < b.value ? 1 : -1));
-      return res.json(asc)
+    const des = joyas.results.sort((a,b) => (a.value < b.value ? 1 : -1));
+      return res.json(des)
   }
   return res.json(HATEOAS2())  
   
@@ -72,11 +72,12 @@ app.get('/api/v2/joyas/categoria/:category', (req, res) => {
 
 app.get("/api/v2/joyas/:id",(req,res) => {
   const {id} = req.params;
-  const joyaFind = {...joyas.results.find((item => item.id == id))}
+  const j = joyas.results.find((item => item.id ===  parseInt(id)))
+  const joyaFind = {...j}
   
   const {fields} = req.query;
   
-  if(!joyaFind){
+  if(!j){
     return res.json({
       error :"404 Not Found",
       msg:`ID  :${id} no existe `
